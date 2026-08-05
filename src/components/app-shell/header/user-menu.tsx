@@ -15,6 +15,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -97,69 +98,75 @@ export function UserMenu({
         align="end"
         className="w-64"
       >
-        <DropdownMenuLabel>
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10 border border-border">
-              {user.imageUrl ? (
-                <AvatarImage
-                  src={user.imageUrl}
-                  alt={user.name}
-                />
-              ) : null}
+        <DropdownMenuGroup>
+          <DropdownMenuLabel>
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10 border border-border">
+                {user.imageUrl ? (
+                  <AvatarImage
+                    src={user.imageUrl}
+                    alt={user.name}
+                  />
+                ) : null}
 
-              <AvatarFallback className="bg-[#ed1b64] font-semibold text-white">
-                {getInitials(user.name)}
-              </AvatarFallback>
-            </Avatar>
+                <AvatarFallback className="bg-[#ed1b64] font-semibold text-white">
+                  {getInitials(user.name)}
+                </AvatarFallback>
+              </Avatar>
 
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">
-                {user.name}
-              </p>
-
-              {user.email ? (
-                <p className="mt-0.5 truncate text-xs font-normal text-muted-foreground">
-                  {user.email}
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold">
+                  {user.name}
                 </p>
-              ) : user.role ? (
-                <p className="mt-0.5 truncate text-xs font-normal text-muted-foreground">
-                  {user.role}
-                </p>
-              ) : null}
+
+                {user.email ? (
+                  <p className="mt-0.5 truncate text-xs font-normal text-muted-foreground">
+                    {user.email}
+                  </p>
+                ) : user.role ? (
+                  <p className="mt-0.5 truncate text-xs font-normal text-muted-foreground">
+                    {user.role}
+                  </p>
+                ) : null}
+              </div>
             </div>
-          </div>
-        </DropdownMenuLabel>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onClick={onProfileClick}>
-          <UserRound
-            aria-hidden="true"
-            className="mr-2 h-4 w-4"
-          />
-          My profile
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={onProfileClick}>
+            <UserRound
+              aria-hidden="true"
+              className="mr-2 h-4 w-4"
+            />
+            My profile
+          </DropdownMenuItem>
 
-        <DropdownMenuItem onClick={onSettingsClick}>
-          <Settings
-            aria-hidden="true"
-            className="mr-2 h-4 w-4"
-          />
-          Account settings
-        </DropdownMenuItem>
+          <DropdownMenuItem onClick={onSettingsClick}>
+            <Settings
+              aria-hidden="true"
+              className="mr-2 h-4 w-4"
+            />
+            Account settings
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          onClick={onLogoutClick}
-          className="text-red-600 focus:text-red-600"
-        >
-          <LogOut
-            aria-hidden="true"
-            className="mr-2 h-4 w-4"
-          />
-          Sign out
-        </DropdownMenuItem>
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            onClick={onLogoutClick}
+            className="text-red-600 focus:text-red-600"
+          >
+            <LogOut
+              aria-hidden="true"
+              className="mr-2 h-4 w-4"
+            />
+            Sign out
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

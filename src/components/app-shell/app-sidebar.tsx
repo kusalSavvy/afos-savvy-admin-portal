@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Building2,
   ChevronDown,
   ChevronRight,
   CircleHelp,
@@ -18,9 +19,9 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-
 export type SidebarIconName =
   | "dashboard"
+  | "accounts"
   | "users"
   | "userManagement"
   | "applications"
@@ -55,11 +56,14 @@ type AppSidebarProps = {
   logoSrc: string;
   navigation: SidebarNavigationGroup[];
   collapsed?: boolean;
+  footerText?: string;
+  footerVersion?: string;
   onNavigate?: () => void;
 };
 
 const iconMap: Record<SidebarIconName, LucideIcon> = {
   dashboard: LayoutDashboard,
+  accounts: Building2,
   users: Users,
   userManagement: UserCog,
   applications: FileText,
@@ -77,11 +81,20 @@ function isRouteActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function createSubmenuId(label: string) {
+  return `sidebar-submenu-${label
+    .trim()
+    .toLowerCase()
+    .replaceAll(" ", "-")}`;
+}
+
 export function AppSidebar({
   appName,
   logoSrc,
   navigation,
   collapsed = false,
+  footerText = "© 2026 Savvy",
+  footerVersion = "v1.0.0",
   onNavigate,
 }: AppSidebarProps) {
   const pathname = usePathname();
@@ -109,13 +122,14 @@ export function AppSidebar({
       {/* Branding */}
       <div
         className={[
-          "flex h-[72px] shrink-0 items-center border-b border-white/10",
+          "flex h-[72px] shrink-0 items-center",
+          "border-b border-white/10",
           collapsed ? "justify-center px-3" : "gap-3 px-5",
         ].join(" ")}
       >
         <Image
           src={logoSrc}
-          alt="Savvy"
+          alt={appName}
           width={120}
           height={44}
           priority
@@ -176,11 +190,6 @@ export function AppSidebar({
                 const isActive =
                   isDirectlyActive || hasActiveChild;
 
-                /*
-                 * Keep a submenu open when:
-                 * 1. the user expanded it, or
-                 * 2. one of its child routes is currently active.
-                 */
                 const isExpanded =
                   Boolean(expandedItems[item.label]) ||
                   hasActiveChild;
@@ -190,7 +199,11 @@ export function AppSidebar({
                     <div
                       key={item.label}
                       aria-disabled="true"
-                      title={collapsed ? item.label : undefined}
+                      title={
+                        collapsed
+                          ? item.label
+                          : undefined
+                      }
                       className={[
                         "flex cursor-not-allowed items-center rounded-xl px-3 py-2.5",
                         "text-sm text-slate-500 opacity-60",
@@ -214,26 +227,34 @@ export function AppSidebar({
                 }
 
                 if (hasChildren) {
+                  const submenuId =
+                    createSubmenuId(item.label);
+
                   return (
                     <div key={item.label}>
                       <button
                         type="button"
                         title={
-                          collapsed ? item.label : undefined
+                          collapsed
+                            ? item.label
+                            : undefined
                         }
                         aria-expanded={
-                          collapsed ? undefined : isExpanded
+                          collapsed
+                            ? undefined
+                            : isExpanded
                         }
-                        aria-controls={`sidebar-submenu-${item.label
-                          .toLowerCase()
-                          .replaceAll(" ", "-")}`}
+                        aria-controls={submenuId}
                         onClick={() => {
                           if (collapsed) {
                             onNavigate?.();
-                            setExpandedItems((currentItems) => ({
-                              ...currentItems,
-                              [item.label]: true,
-                            }));
+
+                            setExpandedItems(
+                              (currentItems) => ({
+                                ...currentItems,
+                                [item.label]: true,
+                              }),
+                            );
 
                             return;
                           }
@@ -241,8 +262,9 @@ export function AppSidebar({
                           toggleExpandedItem(item.label);
                         }}
                         className={[
-                          "group relative flex w-full items-center rounded-xl px-3 py-2.5",
-                          "text-sm transition-colors",
+                          "group relative flex w-full items-center",
+                          "rounded-xl px-3 py-2.5 text-sm",
+                          "transition-colors",
                           collapsed
                             ? "justify-center"
                             : "gap-3",
@@ -296,62 +318,64 @@ export function AppSidebar({
 
                       {!collapsed && isExpanded ? (
                         <div
-                          id={`sidebar-submenu-${item.label
-                            .toLowerCase()
-                            .replaceAll(" ", "-")}`}
+                          id={submenuId}
                           className="ml-5 mt-1 space-y-1 border-l border-white/10 pl-4"
                         >
-                          {item.children?.map((child) => {
-                            const isChildActive =
-                              isRouteActive(
-                                pathname,
-                                child.href,
-                              );
+                          {item.children?.map(
+                            (child) => {
+                              const isChildActive =
+                                isRouteActive(
+                                  pathname,
+                                  child.href,
+                                );
 
-                            if (child.disabled) {
+                              if (child.disabled) {
+                                return (
+                                  <div
+                                    key={child.href}
+                                    aria-disabled="true"
+                                    className="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-500 opacity-60"
+                                  >
+                                    <span className="truncate">
+                                      {child.label}
+                                    </span>
+                                  </div>
+                                );
+                              }
+
                               return (
-                                <div
+                                <Link
                                   key={child.href}
-                                  aria-disabled="true"
-                                  className="flex cursor-not-allowed items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-500 opacity-60"
+                                  href={child.href}
+                                  onClick={onNavigate}
+                                  aria-current={
+                                    isChildActive
+                                      ? "page"
+                                      : undefined
+                                  }
+                                  className={[
+                                    "flex items-center justify-between gap-3",
+                                    "rounded-lg px-3 py-2 text-sm",
+                                    "transition-colors",
+                                    isChildActive
+                                      ? "bg-[#ed1b64]/15 font-medium text-[#ff8fb5]"
+                                      : "text-slate-400 hover:bg-white/[0.06] hover:text-white",
+                                  ].join(" ")}
                                 >
-                                  <span className="truncate">
+                                  <span className="min-w-0 truncate">
                                     {child.label}
                                   </span>
-                                </div>
+
+                                  {child.badge !==
+                                  undefined ? (
+                                    <span className="rounded-full bg-[#ed1b64] px-2 py-0.5 text-[10px] font-bold text-white">
+                                      {child.badge}
+                                    </span>
+                                  ) : null}
+                                </Link>
                               );
-                            }
-
-                            return (
-                              <Link
-                                key={child.href}
-                                href={child.href}
-                                onClick={onNavigate}
-                                aria-current={
-                                  isChildActive
-                                    ? "page"
-                                    : undefined
-                                }
-                                className={[
-                                  "flex items-center justify-between gap-3 rounded-lg px-3 py-2",
-                                  "text-sm transition-colors",
-                                  isChildActive
-                                    ? "bg-[#ed1b64]/15 font-medium text-[#ff8fb5]"
-                                    : "text-slate-400 hover:bg-white/[0.06] hover:text-white",
-                                ].join(" ")}
-                              >
-                                <span className="min-w-0 truncate">
-                                  {child.label}
-                                </span>
-
-                                {child.badge !== undefined ? (
-                                  <span className="rounded-full bg-[#ed1b64] px-2 py-0.5 text-[10px] font-bold text-white">
-                                    {child.badge}
-                                  </span>
-                                ) : null}
-                              </Link>
-                            );
-                          })}
+                            },
+                          )}
                         </div>
                       ) : null}
                     </div>
@@ -366,14 +390,19 @@ export function AppSidebar({
                   <Link
                     key={item.href}
                     href={item.href}
-                    title={collapsed ? item.label : undefined}
+                    title={
+                      collapsed
+                        ? item.label
+                        : undefined
+                    }
                     onClick={onNavigate}
                     aria-current={
                       isActive ? "page" : undefined
                     }
                     className={[
-                      "group relative flex items-center rounded-xl px-3 py-2.5",
-                      "text-sm transition-colors",
+                      "group relative flex items-center",
+                      "rounded-xl px-3 py-2.5 text-sm",
+                      "transition-colors",
                       collapsed
                         ? "justify-center"
                         : "gap-3",
@@ -424,6 +453,37 @@ export function AppSidebar({
           </section>
         ))}
       </nav>
+
+      {/* Sidebar footer */}
+      <div
+        className={[
+          "mt-auto shrink-0 border-t border-white/10 text-slate-400",
+          collapsed ? "px-2 py-4" : "px-5 py-4",
+        ].join(" ")}
+      >
+        {collapsed ? (
+          <div
+            title={`${footerText} · Internal Use Only · ${footerVersion}`}
+            className="flex justify-center"
+          >
+            <span className="text-xs font-semibold">
+              ©
+            </span>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-xs">
+              {footerText}
+            </p>
+
+            <p className="text-[11px] text-slate-500">
+              Internal Use Only
+              &nbsp;&nbsp;•&nbsp;&nbsp;
+              {footerVersion}
+            </p>
+          </div>
+        )}
+      </div>
     </aside>
   );
 }
