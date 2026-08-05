@@ -63,6 +63,10 @@ export function AdminShell({
     router.refresh();
   }
 
+  function handleProfileClick() {
+  router.push("/profile");
+}
+
   return (
     <>
       <AppShell
@@ -86,6 +90,7 @@ export function AdminShell({
             notifications={notifications}
             searchPlaceholder="Search users, applications, lenders, and more..."
             onMenuClick={toggleSidebar}
+            onProfileClick={handleProfileClick}
             onLogoutClick={handleSignOutRequest}
           />
         }

@@ -1,17 +1,8 @@
 "use client";
 
-import {
-  ChevronDown,
-  LogOut,
-  Settings,
-  UserRound,
-} from "lucide-react";
+import { ChevronDown, LogOut, Settings, UserRound } from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,10 +56,7 @@ export function UserMenu({
       >
         <Avatar className="h-10 w-10 border border-border">
           {user.imageUrl ? (
-            <AvatarImage
-              src={user.imageUrl}
-              alt={user.name}
-            />
+            <AvatarImage src={user.imageUrl} alt={user.name} />
           ) : null}
 
           <AvatarFallback className="bg-[#ed1b64] font-semibold text-white">
@@ -94,19 +82,13 @@ export function UserMenu({
         />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent
-        align="end"
-        className="w-64"
-      >
+      <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuGroup>
           <DropdownMenuLabel>
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10 border border-border">
                 {user.imageUrl ? (
-                  <AvatarImage
-                    src={user.imageUrl}
-                    alt={user.name}
-                  />
+                  <AvatarImage src={user.imageUrl} alt={user.name} />
                 ) : null}
 
                 <AvatarFallback className="bg-[#ed1b64] font-semibold text-white">
@@ -115,9 +97,7 @@ export function UserMenu({
               </Avatar>
 
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold">
-                  {user.name}
-                </p>
+                <p className="truncate text-sm font-semibold">{user.name}</p>
 
                 {user.email ? (
                   <p className="mt-0.5 truncate text-xs font-normal text-muted-foreground">
@@ -137,18 +117,12 @@ export function UserMenu({
 
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={onProfileClick}>
-            <UserRound
-              aria-hidden="true"
-              className="mr-2 h-4 w-4"
-            />
+            <UserRound aria-hidden="true" className="mr-2 h-4 w-4" />
             My profile
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={onSettingsClick}>
-            <Settings
-              aria-hidden="true"
-              className="mr-2 h-4 w-4"
-            />
+            <Settings aria-hidden="true" className="mr-2 h-4 w-4" />
             Account settings
           </DropdownMenuItem>
         </DropdownMenuGroup>
@@ -160,10 +134,7 @@ export function UserMenu({
             onClick={onLogoutClick}
             className="text-red-600 focus:text-red-600"
           >
-            <LogOut
-              aria-hidden="true"
-              className="mr-2 h-4 w-4"
-            />
+            <LogOut aria-hidden="true" className="mr-2 h-4 w-4" />
             Sign out
           </DropdownMenuItem>
         </DropdownMenuGroup>
