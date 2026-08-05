@@ -10,6 +10,11 @@ export const navigationConfig: SidebarNavigationGroup[] = [
         icon: "dashboard",
       },
       {
+        label: "Accounts",
+        href: "/accounts",
+        icon: "accounts",
+      },
+      {
         label: "User Management",
         icon: "users",
         children: [

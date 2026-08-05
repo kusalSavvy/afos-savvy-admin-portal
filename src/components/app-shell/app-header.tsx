@@ -50,7 +50,10 @@ export function AppHeader({
   onLogoutClick,
 }: AppHeaderProps) {
   return (
-    <header className="flex h-[72px] w-full items-center gap-3 border-b border-border bg-background px-4 text-foreground sm:px-6">
+    <header className="relative flex h-[72px] w-full items-center gap-3 border-b border-[#cbd5e1] bg-[#eef3f8] px-4 text-[#0f2747] shadow-sm dark:border-white/10 dark:bg-[#102a4c] dark:text-white sm:px-6">
+      {/* Savvy accent line */}
+      <div className="absolute inset-x-0 bottom-0 h-[3px] bg-[#ed1b64]" />
+
       {/* Sidebar toggle */}
       <Button
         type="button"
@@ -58,7 +61,7 @@ export function AppHeader({
         size="icon"
         aria-label="Toggle navigation menu"
         onClick={onMenuClick}
-        className="h-11 w-11 shrink-0 rounded-xl"
+        className="h-11 w-11 shrink-0 rounded-xl border-[#b8c5d3] bg-white/80 text-[#0f2747] shadow-none hover:border-[#ed1b64]/50 hover:bg-white hover:text-[#ed1b64] dark:border-white/15 dark:bg-white/10 dark:text-white dark:hover:border-[#ed1b64]/60 dark:hover:bg-white/15 dark:hover:text-[#ff7eaa]"
       >
         <Menu
           aria-hidden="true"
@@ -87,7 +90,7 @@ export function AppHeader({
           />
         ) : null}
 
-        <div className="hidden h-9 w-px bg-border sm:block" />
+        <div className="hidden h-9 w-px bg-[#b8c5d3] dark:bg-white/15 sm:block" />
 
         <UserMenu
           user={user}
